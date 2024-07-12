@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 const Navbar = () => {
@@ -64,13 +65,13 @@ const Navbar = () => {
                         className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:block"
                     >
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end py-2 md:py-0 sm:ps-7">
-                            <a
+                            <Link
                                 className="py-3 ps-px sm:px-3 font-medium text-white"
-                                href="#"
+                                href="/"
                                 aria-current="page"
                             >
-                                Landing
-                            </a>
+                                Home
+                            </Link>
                             <a
                                 className="py-3 ps-px sm:px-3 font-medium text-white/80 hover:text-white"
                                 href="#"
@@ -173,9 +174,9 @@ const Navbar = () => {
                                     </a>
                                 </div>
                             </div>
-                            <a
+                            <Link
                                 className="flex items-center gap-x-2 font-medium text-white/80 hover:text-white sm:border-s sm:border-white/30 py-2 md:py-0 sm:my-6 sm:ps-6"
-                                href="#"
+                                href="/login"
                             >
                                 <svg
                                     className="flex-shrink-0 size-4"
@@ -193,7 +194,7 @@ const Navbar = () => {
                                     <circle cx={12} cy={7} r={4} />
                                 </svg>
                                 Log in
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </nav>
