@@ -1,22 +1,44 @@
 'use client';
 import React, { useState } from 'react'
+import toast from 'react-hot-toast';
 
 const TodoList = () => {
     // const [num, setnum] = useState(10); 
-    const [tasklist, setTasklist] = useState([
-        {text:'learn HTML',completed:false,createdAt:new Date()},
-        {text:'learn CSS',completed:false,createdAt:new Date()},
-        {text:'learn JS', completed : false,createdAt:new Date()},
-        {text:'learn React', completed : false,createdAt:new Date()},
-    ]);
+    const [tasklist, setTasklist] = useState([]);
 
     
     const addTask=(e)=>{
+       
         if(e.code==='Enter'){
+
+            if(!e.target.value){
+                alert('enter a value to add')
+                return;
+            }
             console.log(e.target.value);
+            const newTask={text:e.target.value,completed:false,createdAt:new Date()};
+            setTasklist([...tasklist,newTask]);
+            e.target.value='';
+            toast.success('New task added successfully');
         }
 
     };
+
+    const deleteTask=(index)=>{
+        console.log(index);
+        const temp=tasklist;
+        temp.splice(index,1);
+        setTasklist([...temp]);
+        toast.success('Task deleted successfully');
+        
+    }
+
+    const toggleComplete=(index)=>{
+        const temp=tasklist;
+        temp[index].completed=!temp[index].completed;
+        setTasklist([...temp]);
+
+    }
 
 
 
@@ -39,11 +61,25 @@ const TodoList = () => {
         </div>
         <div className='p-5'>
             {
-                tasklist.map((task, index)=>{return <div key={index}>
-                    <p>{task.text}</p>
-                    <div>
-                    <button>Edit</button>
-                    <button>Delete</button>
+                tasklist.map((task, index)=>{return <div key={index} className='shadow-md border-2 p-4 mb-5 rounded-lg '>
+                    {task.completed?(
+                        <p className='text-sm bg-green-500 w-fit rounded-full text-white px-3'>Complete</p>
+
+                    ):(
+                        <p className='text-sm bg-yellow-500 w-fit rounded-full text-white px-3'>Pending</p>
+                    ) }
+                    <p className={task.completed ? 'line-through':''}>{task.text}</p>
+                    <div className='mt-3 flex gap-3 justify-end'>
+
+                    <button
+                    onClick={()=>{toggleComplete(index)}}
+                    className='bg-blue-500 px-2 text-white rounded-full '>Edit</button>
+
+
+                    <button 
+                    onClick={()=>{deleteTask(index)}}
+                    
+                    className='bg-red-500 px-2 text-white rounded-full '>Delete</button>
                     </div>
                     
                 </div>})
