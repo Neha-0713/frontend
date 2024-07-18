@@ -1,7 +1,29 @@
+
+'use client';
+import { useFormik } from 'formik'
 import React from 'react';
-import classes from './login.module.css';
+// import classes from './login.module.css';
+import * as Yup from 'yup';
+
+const LoginSchema=Yup.object().shape({
+  email:Yup.string().email('invalid').required('required'),
+password:Yup.string().min(2,'too short').matches(/[a-z]/,'must include lowercase')
+})
 
 const Login = () => {
+ 
+  const formik= useFormik({
+    initialValues:{
+    email:'',
+    password:'',
+
+    },
+    validationSchema: LoginSchema,
+    onSubmit:(values)=>{
+      console.log(values);
+    }
+  })
+  
   return (
     <div>
       <div className='flex justify-center w-30%'>
@@ -56,7 +78,8 @@ const Login = () => {
         Or
       </div>
       {/* Form */}
-      <form>
+      
+      <form onSubmit={formik.handleSubmit}>
         <div className="grid gap-y-4">
           {/* Form Group */}
           <div>
@@ -70,11 +93,15 @@ const Login = () => {
               <input
                 type="email"
                 id="email"
-                name="email"
+                
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                
                 className="py-3 px-4 block w-full border-gray-200 border-2 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                 required=""
                 aria-describedby="email-error"
               />
+              <p className='text-xs text-red-600 mt-2'>{formik.errors.email}</p>
               <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                 <svg
                   className="size-5 text-red-500"
@@ -113,11 +140,13 @@ const Login = () => {
               <input
                 type="password"
                 id="password"
-                name="password"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 className="py-3 px-4 block w-full border-gray-200 border-2 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                 required=""
                 aria-describedby="password-error"
               />
+              <p className='text-xs text-red-600 mt-2'>{formik.errors.password}</p>
               <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                 <svg
                   className="size-5 text-red-500"

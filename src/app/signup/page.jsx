@@ -10,6 +10,13 @@ import * as Yup from 'yup';
      .required(' name is Required'),
    
    email: Yup.string().email('Invalid email').required('Required'),
+   password:Yup.string().required('required')
+   .matches(/[a-z]/,'must include small letters')
+   .matches(/[A-Z]/,'must include uppercase')
+   .matches(/[0-9]/,'must contain a number')
+   .matches(/\W/,'must contain special characters'),
+
+   confirmPassword: Yup.string().oneOf([Yup.ref('password'),null],'passwords must match')
  });
 
 const Signup = () => {
