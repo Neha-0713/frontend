@@ -28,9 +28,15 @@ initialValues:{
   password:'',
   confirmPassword:''
 },
-onSubmit:(values)=>{
+onSubmit:(values, {resetForm})=>{
   console.log(values);
   //send values to backend
+
+  setTimeout(() => {
+  resetForm();
+    
+  }, 3000);
+
 },
 validationSchema: SignupSchema
 })
@@ -280,6 +286,7 @@ validationSchema: SignupSchema
             {/* End Checkbox */}
             <button
               type="submit"
+              disabled={signupForm.isSubmitting}//disables the button while the form is being submitted
               className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
             >
               Sign up
