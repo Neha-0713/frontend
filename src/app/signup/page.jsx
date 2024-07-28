@@ -1,8 +1,13 @@
 'use client';
+import Link from "next/link";
+import React from "react";
 import { useFormik } from 'formik'
 import React from 'react'
 import * as Yup from 'yup';
- 
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+
  const SignupSchema = Yup.object().shape({
    name: Yup.string()
      .min(2, 'Too Short!')
@@ -28,18 +33,29 @@ initialValues:{
   password:'',
   confirmPassword:''
 },
-onSubmit:(values, {resetForm})=>{
-  console.log(values);
-  //send values to backend
+onSubmit: (values, { resetForm , setSubmitting }) => {
+  console.log(values); //send values to backend
 
-  setTimeout(() => {
-  resetForm();
-    
-  }, 3000);
-
+  //making request on backend to save data
+  axios
+    .post("http://localhost:5000/user/add", values)
+    .then((response) => {
+      console.log(response.status);
+      resetForm();
+    toast.success('Registered successfully'); 
+      router.push("/login");
+    })
+    .catch((err) => {
+      console.log(err);
+      if(err.response.data.code ===11000){
+      
+        toast.error('Email exists');
+      }
+      setSubmitting(false);
+    }); // if same localhost it cann be /user/add ,dont use https as its http local server
 },
-validationSchema: SignupSchema
-})
+validationSchema: signupSchema,
+});
 
   return (
     <div>
