@@ -1,6 +1,7 @@
 'use client';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
+import toast from 'react-hot-toast';
 
 const ManageUsers = () => {
 
@@ -9,11 +10,22 @@ const runOnce = useRef(false);
 const [userList, setUserList] = useState([]);
 
     const fetchUsers= async ()=>{
-         const res =  await axios.get('http//localhost:5000/user/getall')
+         const res =  await axios.get('http://localhost:5000/user/getall')
          console.table(res.data);
          setUserList(res.data);
+ }
 
-    }
+const deleteUser= (id)=>{
+  axios.delete('http://localhost:5000/user/delete/' + id)
+  .then((response) => {
+    toast.success('user deleted successfully');
+    fetchUsers();
+  }).catch((err) => {
+    console.log(err);
+    toast.error('failed to delete user')
+  });
+}
+
     useEffect(() => {
         if(!runOnce.current){
             fetchUsers();
@@ -61,14 +73,14 @@ const [userList, setUserList] = useState([]);
                 <th scope="col" className="px-6 py-3 text-start">
                   <div className="flex items-center gap-x-2">
                     <span className="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                      Position
+                      Email Address
                     </span>
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3 text-start">
                   <div className="flex items-center gap-x-2">
                     <span className="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                      Status
+                      City
                     </span>
                   </div>
                 </th>
@@ -86,7 +98,7 @@ const [userList, setUserList] = useState([]);
                     </span>
                   </div>
                 </th>
-                <th scope="col" className="px-6 py-3 text-end" />
+                <th colSpan={2} scope="col" className="px-6 py-3 text-end" />
               </tr>
             </thead>
             <tbody className="dark:bg-neutral-800 divide-y divide-gray-200 dark:divide-neutral-700">
@@ -155,7 +167,7 @@ const [userList, setUserList] = useState([]);
                             <td className="size-px whitespace-nowrap">
                               <div className="px-6 py-3">
                                 <span className="text-sm text-gray-500 dark:text-neutral-500">
-                                  28 Dec, 12:12
+                                  {new Date(user.createdAt).toDateString}
                                 </span>
                               </div>
                             </td>
@@ -167,6 +179,16 @@ const [userList, setUserList] = useState([]);
                                 >
                                   Edit
                                 </a>
+                              </div>
+                            </td>
+                            <td className="size-px whitespace-nowrap">
+                              <div className="px-6 py-1.5">
+                                <button onClick={()=>{deleteUser(user.id)}}
+                                  className=" text-sm text-white-600 font-medium bg-red-600 rounded-lg px-3 py-1"
+                                  
+                                >
+                                  Delete
+                                </button>
                               </div>
                             </td>
                           </tr>

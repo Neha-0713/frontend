@@ -2,7 +2,6 @@
 import Link from "next/link";
 import React from "react";
 import { useFormik } from 'formik'
-import React from 'react'
 import * as Yup from 'yup';
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -54,7 +53,7 @@ onSubmit: (values, { resetForm , setSubmitting }) => {
       setSubmitting(false);
     }); // if same localhost it cann be /user/add ,dont use https as its http local server
 },
-validationSchema: signupSchema,
+validationSchema: SignupSchema,
 });
 
   return (
