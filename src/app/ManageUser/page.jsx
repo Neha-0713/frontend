@@ -10,7 +10,7 @@ const runOnce = useRef(false);
 const [userList, setUserList] = useState([]);
 
     const fetchUsers= async ()=>{
-         const res =  await axios.get('http://localhost:5000/user/getall')
+         const res =  await axios.get('http://localhost:5000/user/getall');
          console.table(res.data);
          setUserList(res.data);
  }
@@ -175,7 +175,7 @@ const deleteUser= (id)=>{
                               <div className="px-6 py-1.5">
                                 <a
                                   className="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-blue-500"
-                                  href="/UpdateUser"
+                                  href={"/UpdateUser/" + user._id}
                                 >
                                   Edit
                                 </a>
