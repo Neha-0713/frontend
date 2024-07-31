@@ -47,14 +47,14 @@ const ProductForm = () => {
     onSubmit: (values, {resetForm, setSubmitting})=>{
       console.log(values);
 
-      axios.post("http://localhost:5000/products/add", values)
+      axios.post("http://localhost:5000/product/add", values)
       .then((response) => {
         console.log(response.status);
         resetForm();
         fileRef.current.value="";
        
         toast.success("Registered successfully");
-          router.push("/getall");
+          router.push("/allproduct");
       }).catch((err) => {
         console.log(err);
       });
