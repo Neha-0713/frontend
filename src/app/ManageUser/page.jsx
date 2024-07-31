@@ -10,7 +10,7 @@ const runOnce = useRef(false);
 const [userList, setUserList] = useState([]);
 
     const fetchUsers= async ()=>{
-         const res =  await axios.get('http://localhost:5000/user/getall');
+         const res =  await axios.get('http://localhost:5000/user/getall/');
          console.table(res.data);
          setUserList(res.data);
  }
