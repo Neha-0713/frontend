@@ -1,8 +1,11 @@
 'use client';
 import React from "react";
 import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import axios from "axios";
+import toast from "react-hot-toast";
+
 
 const productSchema = Yup.object().shape({
   title: Yup.string()
@@ -22,29 +25,33 @@ const productSchema = Yup.object().shape({
 
   price: Yup.number().required(),
 
+
+
+
 });
 
-const initialValues = {
-  title:'',
-  brand:'',
-  category:'',
-  model:'',
-  price:'',
-  image:'',
-}
+const initialValues= {
+  title: "",
+  brand:"",
+  category:"",
+  model:"",
+  price:"",
+  image:"",
+};
 
 const ProductForm = () => {
   const router = useRouter();
   const formik = useFormik({
+    initialValues: initialValues,
     onSubmit: (values, {resetForm, setSubmitting})=>{
       console.log(values);
 
-      axios.post("http://localhost:5000/product/add")
+      axios.post("http://localhost:5000/products/add", values)
       .then((response) => {
         console.log(response.status);
         resetForm()
         toast.success("Registered successfully");
-          router.push("/getall");
+          //router.push("/getall");
       }).catch((err) => {
         console.log(err);
         if (err.response.data.code === 11000) {
@@ -73,7 +80,7 @@ const ProductForm = () => {
                 Manage product name, category and price settings.
               </p>
             </div>
-            <form onSubmit={formik.handleSubmit()}>
+            <form onSubmit={formik.handleSubmit}>
               {/* Grid */}
               <div className="grid sm:grid-cols-12 gap-2 sm:gap-6">
                 <div className="sm:col-span-3">
@@ -96,13 +103,24 @@ const ProductForm = () => {
                      
                        <input 
                         id="image"
-                        type="media"
+                        type="file"
                         onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                        value={formik.values.image}
-                        />
+                        onChange={(event) => {
+                          formik.setFieldValue(
+                            "image",
+                            URL.createObjectURL(event.currentTarget.files[0])
+                          );
+                        }}
+                      />
+
                        </label>
                       </div>
+                      {formik.errors.image && formik.touched.image ? (
+                  <p className="text-xs text-red-600 mt-2">
+                    {formik.errors.image}
+                  </p>
+                ) : null}
+
                     </div>
                   </div>
                 </div>
@@ -121,13 +139,21 @@ const ProductForm = () => {
                     <input
                       id="title"
                       type="text"
+                      name="title"
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
                       value={formik.values.title}
                       className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                       placeholder=" Men polo T-shirt"
                     />
+                    
                   </div>
+                  {formik.errors.title && formik.touched.title ? (
+                    <p className="text-xs text-red-600 mt-2">
+                      {formik.errors.title}
+                    </p>
+                  ) : null}
+
                 </div>
                 <div className="sm:col-span-3">
                   <label
@@ -150,6 +176,12 @@ const ProductForm = () => {
                       placeholder="Adidas"
                     />
                   </div>
+                  {formik.errors.brand && formik.touched.brand ? (
+                    <p className="text-xs text-red-600 mt-2">
+                      {formik.errors.brand}
+                    </p>
+                  ) : null}
+
                 </div>
                 <div className="sm:col-span-3">
                   <label
@@ -172,6 +204,12 @@ const ProductForm = () => {
                       placeholder="Clothing"
                     />
                   </div>
+                  {formik.errors.category && formik.touched.category ? (
+                    <p className="text-xs text-red-600 mt-2">
+                      {formik.errors.category}
+                    </p>
+                  ) : null}
+
                 </div>
                 <div className="sm:col-span-3">
                   <label
@@ -194,6 +232,12 @@ const ProductForm = () => {
                       placeholder="₹4000"
                     />
                   </div>
+                  {formik.errors.price && formik.touched.price ? (
+                    <p className="text-xs text-red-600 mt-2">
+                      {formik.errors.price}
+                    </p>
+                  ) : null}
+
                 </div>
               </div>
               {/* End Grid */}
@@ -205,7 +249,8 @@ const ProductForm = () => {
                   Cancel
                 </button>
                 <button
-                  type="button"
+                disabled={formik.isSubmitting}
+                  type="submit"
                   className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                 >
                   Save changes
