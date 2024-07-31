@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import React, { useRef } from "react";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
@@ -41,6 +41,7 @@ const initialValues= {
 
 const ProductForm = () => {
   const router = useRouter();
+  const fileRef = useRef("");
   const formik = useFormik({
     initialValues: initialValues,
     onSubmit: (values, {resetForm, setSubmitting})=>{
@@ -49,16 +50,15 @@ const ProductForm = () => {
       axios.post("http://localhost:5000/products/add", values)
       .then((response) => {
         console.log(response.status);
-        resetForm()
+        resetForm();
+        fileRef.current.value="";
+       
         toast.success("Registered successfully");
-          //router.push("/getall");
+          router.push("/getall");
       }).catch((err) => {
         console.log(err);
-        if (err.response.data.code === 11000) {
-          toast.error("product exists");
-        }
-        
       });
+      setSubmitting(false);
     },
     validationSchema: productSchema,
   })
@@ -104,11 +104,13 @@ const ProductForm = () => {
                        <input 
                         id="image"
                         type="file"
+                        ref={fileRef}
                         onBlur={formik.handleBlur}
                         onChange={(event) => {
                           formik.setFieldValue(
                             "image",
                             URL.createObjectURL(event.currentTarget.files[0])
+                            
                           );
                         }}
                       />
