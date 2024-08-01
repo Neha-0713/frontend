@@ -1,8 +1,10 @@
 'use client';
 import axios from 'axios';
 import { Formik } from 'formik';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
+import { useRouter } from "next/navigation";
 
 const UpdateUser = () => {
 
@@ -19,9 +21,20 @@ const UpdateUser = () => {
         getUserData();
     }, [])
 
-    const submitForm = (values) => {
+    const submitForm = (values, setSubmitting) => {
         console.log(values);
     }
+
+    axios.put('/http://localhost:5000/user/update/' +id, values)
+    .then((result) => {
+        toast.success('user updated successfully');
+        router.back();
+    }).catch((err) => {
+        console.log(err);
+        toast.error('failed to update user');
+        
+    });
+    
 
     return (
         <div className='max-w-[80%] mx-auto'>
