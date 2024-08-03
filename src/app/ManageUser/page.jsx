@@ -26,7 +26,13 @@ const ManageUsers = () => {
             fetchUsers();
             runOnce.current = true;
         }
+
+        // return () => {
+        //     prompt('do you to save changes?')
+        // }
+
     }, [])
+
     const displayUsers = () => {
         return (
             <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
